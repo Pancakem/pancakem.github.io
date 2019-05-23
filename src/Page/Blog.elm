@@ -4,16 +4,24 @@ import Html exposing (Html)
 import Element exposing (..)
 import Element.Background as Background
 import Element.Font as Font
+import Element.Region as Region
 import Types
 
 
+init : String -> (Model, Cmd msg)
+init str = 
+    ({content = Nothing }
+    , Cmd.none  -- use this command to load blog with said title
+    )
+
 type alias Model =
-    { content : Types.Content
+    { content : Maybe Types.Content
     }
 
 
 type Msg = 
     ClickedTag String
+    | LoadBlog 
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -21,21 +29,43 @@ update msg model =
     case msg of
         ClickedTag _ ->
             ( model, Cmd.none )
+        
+        LoadBlog ->
+            (model, Cmd.none)
 
 
 view : Model -> {title: String, content: Html Msg}
 view model = 
-    {title = model.content.blog.title
+    let
+        ttle = case model.content of
+            Just cont ->
+                cont.blog.title
+            
+            Nothing -> 
+                ""
+    in
+    
+    {title = ttle
     , content = layout [] <| viewBlog model
     }
 
 viewBlog : Model -> Element Msg
 viewBlog {content} =
-    Element.paragraph []
-    [Element.el[] (viewTitle content.blog.title )
-    , Element.el[] (viewBody content.blog.content)
-    , Element.el[] (viewTags content.tags)
-    ]
+    case content of 
+        Just cont -> 
+
+            Element.column 
+            [ height fill
+            , width <| fillPortion 1
+            , paddingXY 0 10
+            ]
+            [Element.el[] (viewTitle cont.blog.title )
+            , Element.el[] (viewBody cont.blog.content)
+            , Element.el[] (viewTags cont.tags)
+            ]
+        
+        Nothing -> 
+            Element.text ""
 
 viewBody : String ->  Element Msg
 viewBody str = 
@@ -59,6 +89,7 @@ viewTitle str =
     Element.el
         [ Font.color (Element.rgb 0 0 1)
         , Font.size 18
+        , Region.heading 1
         , Font.family
             [ Font.typeface "Open Sans"
             , Font.sansSerif
@@ -77,10 +108,7 @@ viewTags lisTag =
 
         tagEl tag =
             let
-                ta = 
-                    case tag of
-                        Types.Tag st ->
-                            st
+                ta = Types.retrieveTagString tag
             in
             el[]
                 (text ("# " ++ ta))
