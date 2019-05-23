@@ -7,12 +7,15 @@ import Page.Home as Home
 import Types exposing (..)
 import Url
 import Page
+import Route
 import Page.Blog as PBlog
+import Page.NotFound as NtFound
 
 init : () -> Url.Url -> Key -> (Model, Cmd Msg)
 init _ url _ = 
     -- (Home {posts = [testContent]}, Cmd.none)
-    (BlogModel {content = testContent}, Cmd.none)
+    -- (BlogModel {content = Just testContent}, Cmd.none)
+    changeRouteTo (Route.fromUrl url) Load
 
 main : Program () Model Msg
 main =
@@ -25,14 +28,11 @@ main =
         , subscriptions = subscriptions
     }
 
-testContent : Content
-testContent = 
-    Content (PublishDate "19-05-2019") (Blog "First Blog" cont) ([Tag "test"])
-
 type Model =
-    Home Home.Model
+    NotFound
+    | Home Home.Model
     | BlogModel PBlog.Model
-
+    | Load
 
 type Msg
     = LinkClicked Browser.UrlRequest
@@ -40,8 +40,7 @@ type Msg
     | HomeMsg Home.Msg
     | BlogMsg PBlog.Msg
     | SelectBlog String
-
-
+    | Empty
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -65,6 +64,19 @@ update msg model =
         (_, _) ->
             (model, Cmd.none)
 
+changeRouteTo : Maybe Route.Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo maybeRoute model =
+    case maybeRoute of        
+        Just Route.Home ->
+            Home.init 
+                |> updateWith Home HomeMsg model
+
+        Just (Route.Blog str ) ->
+            PBlog.init str 
+                |> updateWith BlogModel BlogMsg model
+        
+        Nothing -> 
+            (NotFound, Cmd.none)
 
 view : Model -> Browser.Document Msg
 view model =
@@ -84,6 +96,12 @@ view model =
         
         BlogModel mod ->
             viewPage Page.Blog BlogMsg (PBlog.view mod)
+        
+        NotFound -> 
+            viewPage Page.Other (\_ -> Empty) NtFound.view 
+        
+        Load -> 
+            viewPage Page.Other (\_ -> Empty) emptyview
             
 
 subscriptions : Model -> Sub Msg
@@ -95,6 +113,18 @@ updateWith toModel toMsg model ( subModel, subCmd ) =
     ( toModel subModel
     , Cmd.map toMsg subCmd
     )
+
+--empty view
+emptyview : { title : String, content : Html msg }
+emptyview = 
+    { title = ""
+    , content = Html.text ""
+    }
+
+-- test content
+testContent : Content
+testContent = 
+    Content (createPublishDate "19-05-2019") (Blog "First Blog" cont) ([createTag "test"])
 
 cont = """An example of a simple mechanism that can be modeled by a state machine is a turnstile.[3][4] A turnstile, used to control access to subways and amusement park rides, is a gate with three rotating arms at waist height, one across the entryway. Initially the arms are locked, blocking the entry, preventing patrons from passing through. Depositing a coin or token in a slot on the turnstile unlocks the arms, allowing a single customer to push through. After the customer passes through, the arms are locked again until another coin is inserted.
 
