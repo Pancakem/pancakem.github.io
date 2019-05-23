@@ -1,10 +1,16 @@
-module Page.Home exposing (view, Model, update, Msg)
+module Page.Home exposing (init, view, Model, update, Msg)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Types exposing (..)
 
-
+init : (Model, Cmd msg)
+init = 
+    ({
+        posts = []
+    }
+    , Cmd.none
+    )
 -- model 
 
 type alias Model = 
