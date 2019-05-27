@@ -1,4 +1,4 @@
-module Page.Blog exposing (..)
+module Page.Blog exposing (Model, Msg, init, update, view)
 
 import Html exposing (Html)
 import Element exposing (..)

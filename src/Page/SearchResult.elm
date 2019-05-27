@@ -1,4 +1,4 @@
-module Page.SearchResult exposing (..)
+module Page.SearchResult exposing (Model, Msg, init, update, view)
 
 import Types
 import Http
