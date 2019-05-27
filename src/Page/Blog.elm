@@ -9,10 +9,10 @@ import Types
 import Http
 
 
-init : String -> (Model, Cmd msg)
+init : String -> (Model, Cmd Msg)
 init str = 
     ({content = Nothing }
-    , Cmd.none  -- use this command to load blog with said title
+    , loadBlog str -- use this command to load blog with said title
     )
 
 type alias Model =
@@ -32,14 +32,28 @@ update msg model =
             ( model, Cmd.none )
         
         LoadBlog res ->
-            (model, Cmd.none)
+            let
+                newModel = 
+                    case res of
+                        Ok cont ->
+                            {model | content = Just cont}
+                        
+                        Err _ ->
+                            model
+            in
+            (newModel, Cmd.none)
 
-loadAllBlogs : Cmd Msg
-loadAllBlogs = 
+loadBlog : String ->  Cmd Msg
+loadBlog str = 
+    let
+        builtURL = "" ++ str
+    in
     Http.get
-    { url = Types.url 
+    { url = builtURL
     , expect = Http.expectJson LoadBlog Types.contentDecoder
     }
+
+-- views
 
 view : Model -> {title: String, content: Html Msg}
 view model = 
@@ -60,7 +74,6 @@ viewBlog : Model -> Element Msg
 viewBlog {content} =
     case content of 
         Just cont -> 
-
             Element.column 
             [ height fill
             , width <| fillPortion 1
