@@ -2,14 +2,16 @@ module Page.Home exposing (init, view, Model, update, Msg)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Http 
 import Types exposing (..)
+import Json.Decode as Decode
 
-init : (Model, Cmd msg)
+init : (Model, Cmd Msg)
 init = 
     ({
         posts = []
     }
-    , Cmd.none
+    , loadAllBlogs
     )
 -- model 
 
@@ -40,11 +42,57 @@ viewSnippet content =
 -- update 
 
 type Msg = 
-    Clicked
+    Clicked String
+    | LoadAllBlogs (Result Http.Error (List Content))
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Clicked ->
+        Clicked _->
             (model, Cmd.none)
+        
+        LoadAllBlogs blogs->
+            (model, Cmd.none)
+
+-- json structure
+-- [
+--   {
+--     "blog": {
+--       "title": "",
+--       "content": ""
+--     }
+--   }
+-- ]
+
+blogDecoder : Decode.Decoder Types.Blog
+blogDecoder = 
+    Decode.map2 Types.Blog 
+        (Decode.field "title" Decode.string )
+        (Decode.field "content" Decode.string)
+
+publishDateDecoder : String -> Decode.Decoder Types.PublishDate
+publishDateDecoder datestr =
+   Decode.succeed (createPublishDate datestr)
+    
+tagDecoder : List String -> Decode.Decoder (List Types.Tag)
+tagDecoder tagstrs = 
+    Decode.succeed (List.map createTag tagstrs)
+
+contentDecoder : Decode.Decoder Types.Content
+contentDecoder = 
+    Decode.map3 Types.Content
+        (Decode.field "publishDate" Decode.string |> Decode.andThen publishDateDecoder)
+        (Decode.field "blog" blogDecoder)
+        (Decode.field "tags" (Decode.list Decode.string) |> Decode.andThen tagDecoder )
+
             
+loadAllBlogs : Cmd Msg
+loadAllBlogs = 
+    Http.get
+    { url = url 
+    , expect = Http.expectJson LoadAllBlogs (Decode.list contentDecoder)
+    }
+
+url : String
+url = 
+    ""
