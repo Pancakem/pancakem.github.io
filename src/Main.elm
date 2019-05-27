@@ -10,12 +10,11 @@ import Page
 import Route
 import Page.Blog as PBlog
 import Page.NotFound as NtFound
+import Page.SearchResult as SR
 
 init : () -> Url.Url -> Key -> (Model, Cmd Msg)
 init _ url _ = 
-    -- (Home {posts = [testContent]}, Cmd.none)
-    -- (BlogModel {content = Just testContent}, Cmd.none)
-    changeRouteTo (Route.fromUrl url) Load
+    changeRouteTo (Route.fromUrl url) <| Home (Home.Model [])
 
 main : Program () Model Msg
 main =
@@ -32,6 +31,7 @@ type Model =
     NotFound
     | Home Home.Model
     | BlogModel PBlog.Model
+    | SRModel SR.Model
     | Load
 
 type Msg
@@ -39,6 +39,7 @@ type Msg
     | UrlChanged Url.Url
     | HomeMsg Home.Msg
     | BlogMsg PBlog.Msg
+    | SRMsg SR.Msg
     | SelectBlog String
     | Empty
 
@@ -59,7 +60,12 @@ update msg model =
             (model, Cmd.none)
 
         (BlogMsg subMsg, BlogModel mod) ->
-            (model, Cmd.none)
+            PBlog.update subMsg mod
+                |> updateWith BlogModel BlogMsg model
+        
+        (SRMsg subMsg, SRModel mod) ->
+            SR.update subMsg mod
+                |> updateWith SRModel SRMsg model
         
         (_, _) ->
             (model, Cmd.none)
@@ -74,6 +80,10 @@ changeRouteTo maybeRoute model =
         Just (Route.Blog str ) ->
             PBlog.init str 
                 |> updateWith BlogModel BlogMsg model
+
+        Just (Route.SearchResult str) ->
+            SR.init str 
+                |> updateWith SRModel SRMsg model
         
         Nothing -> 
             (NotFound, Cmd.none)
@@ -102,6 +112,9 @@ view model =
         
         Load -> 
             viewPage Page.Other (\_ -> Empty) emptyview
+        
+        SRModel mod ->
+            viewPage Page.SearchResult SRMsg (SR.view mod)
             
 
 subscriptions : Model -> Sub Msg
