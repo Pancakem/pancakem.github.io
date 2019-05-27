@@ -51,8 +51,17 @@ update msg model =
         Clicked _->
             (model, Cmd.none)
         
-        LoadAllBlogs blogs->
-            (model, Cmd.none)
+        LoadAllBlogs res->
+            let
+                newModel = 
+                    case res of 
+                        Ok conts ->
+                            {model | posts = conts}
+                        
+                        Err _ ->
+                            model
+            in
+            (newModel, Cmd.none)
             
 loadAllBlogs : Cmd Msg
 loadAllBlogs = 
