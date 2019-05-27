@@ -6,6 +6,7 @@ import Element.Background as Background
 import Element.Font as Font
 import Element.Region as Region
 import Types
+import Http
 
 
 init : String -> (Model, Cmd msg)
@@ -21,7 +22,7 @@ type alias Model =
 
 type Msg = 
     ClickedTag String
-    | LoadBlog 
+    | LoadBlog (Result Http.Error (Types.Content))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -30,9 +31,15 @@ update msg model =
         ClickedTag _ ->
             ( model, Cmd.none )
         
-        LoadBlog ->
+        LoadBlog res ->
             (model, Cmd.none)
 
+loadAllBlogs : Cmd Msg
+loadAllBlogs = 
+    Http.get
+    { url = Types.url 
+    , expect = Http.expectJson LoadBlog Types.contentDecoder
+    }
 
 view : Model -> {title: String, content: Html Msg}
 view model = 
