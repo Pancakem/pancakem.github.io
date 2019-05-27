@@ -53,38 +53,6 @@ update msg model =
         
         LoadAllBlogs blogs->
             (model, Cmd.none)
-
--- json structure
--- [
---   {
---     "blog": {
---       "title": "",
---       "content": ""
---     }
---   }
--- ]
-
-blogDecoder : Decode.Decoder Types.Blog
-blogDecoder = 
-    Decode.map2 Types.Blog 
-        (Decode.field "title" Decode.string )
-        (Decode.field "content" Decode.string)
-
-publishDateDecoder : String -> Decode.Decoder Types.PublishDate
-publishDateDecoder datestr =
-   Decode.succeed (createPublishDate datestr)
-    
-tagDecoder : List String -> Decode.Decoder (List Types.Tag)
-tagDecoder tagstrs = 
-    Decode.succeed (List.map createTag tagstrs)
-
-contentDecoder : Decode.Decoder Types.Content
-contentDecoder = 
-    Decode.map3 Types.Content
-        (Decode.field "publishDate" Decode.string |> Decode.andThen publishDateDecoder)
-        (Decode.field "blog" blogDecoder)
-        (Decode.field "tags" (Decode.list Decode.string) |> Decode.andThen tagDecoder )
-
             
 loadAllBlogs : Cmd Msg
 loadAllBlogs = 
@@ -93,6 +61,3 @@ loadAllBlogs =
     , expect = Http.expectJson LoadAllBlogs (Decode.list contentDecoder)
     }
 
-url : String
-url = 
-    ""
