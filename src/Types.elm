@@ -1,6 +1,8 @@
 module Types exposing (Tag, Blog, PublishDate, Content, createTag,
                         createPublishDate, retrieveDateString, 
-                        retrieveTagString)
+                        retrieveTagString, contentDecoder, url)
+
+import Json.Decode exposing (..)
 
 type Tag = Tag String
 
@@ -32,3 +34,38 @@ type alias Content =
     , blog : Blog
     , tags : List Tag
     }
+
+-- json structure
+-- [
+--   {
+--     "blog": {
+--       "title": "",
+--       "content": ""
+--     }
+--   }
+-- ]
+
+blogDecoder : Decoder Blog
+blogDecoder = 
+    map2 Blog 
+        (field "title" string )
+        (field "content" string)
+
+publishDateDecoder : String -> Decoder PublishDate
+publishDateDecoder datestr =
+   succeed (createPublishDate datestr)
+    
+tagDecoder : List String -> Decoder (List Tag)
+tagDecoder tagstrs = 
+    succeed (List.map createTag tagstrs)
+
+contentDecoder : Decoder Content
+contentDecoder = 
+    map3 Content
+        (field "publishDate" string |> andThen publishDateDecoder)
+        (field "blog" blogDecoder)
+        (field "tags" (list string) |> andThen tagDecoder )
+
+url : String
+url = 
+    ""
