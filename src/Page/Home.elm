@@ -57,10 +57,6 @@ viewWebData {posts} =
 
 
 -- update 
-
-type alias WebData a =
-      RemoteData.RemoteData Http.Error a
-
 type Msg = 
     Clicked String
     | LoadAllBlogs (WebData (List Content))
