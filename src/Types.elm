@@ -1,8 +1,10 @@
-module Types exposing (Tag, Blog, PublishDate, Content, createTag,
-                        createPublishDate, retrieveDateString, 
+module Types exposing (Tag, Blog, PublishDate, Content, WebData,
+                        createTag, createPublishDate, retrieveDateString, 
                         retrieveTagString, contentDecoder, url)
 
 import Json.Decode exposing (..)
+import RemoteData
+import Http exposing (..)
 
 type Tag = Tag String
 
@@ -69,3 +71,6 @@ contentDecoder =
 url : String
 url = 
     ""
+
+type alias WebData a =
+    RemoteData.RemoteData Http.Error a
