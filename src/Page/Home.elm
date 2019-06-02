@@ -5,27 +5,27 @@ import Html.Attributes exposing (..)
 import Http 
 import Types exposing (..)
 import Json.Decode as Decode
+import RemoteData
 
 init : (Model, Cmd Msg)
 init = 
     ({
-        posts = []
+        posts = RemoteData.Loading
     }
     , loadAllBlogs
     )
--- model 
 
+-- model 
 type alias Model = 
-    { posts : List Content
+    { posts : WebData (List Content)
     }
 
 
 -- view
-
 view : Model -> { title : String, content : Html Msg}
 view model =
     {title = "Home"
-    , content = div [] (List.map viewSnippet model.posts)
+    , content = viewWebData model
     }
 
 viewSnippet : Content -> Html Msg
@@ -39,11 +39,31 @@ viewSnippet content =
         , p [] [text tease ]
         ]
 
+viewWebData : Model -> Html Msg
+viewWebData {posts} = 
+    case posts of
+        RemoteData.Loading ->
+            text "Loading..."
+        
+        RemoteData.NotAsked ->
+            text ""
+        
+        RemoteData.Failure err ->
+            text ("Error loading blogs:" ++ Debug.toString err)
+        
+        RemoteData.Success data ->
+            div [] (List.map viewSnippet data)
+        
+
+
 -- update 
+
+type alias WebData a =
+      RemoteData.RemoteData Http.Error a
 
 type Msg = 
     Clicked String
-    | LoadAllBlogs (Result Http.Error (List Content))
+    | LoadAllBlogs (WebData (List Content))
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -52,21 +72,12 @@ update msg model =
             (model, Cmd.none)
         
         LoadAllBlogs res->
-            let
-                newModel = 
-                    case res of 
-                        Ok conts ->
-                            {model | posts = conts}
-                        
-                        Err _ ->
-                            model
-            in
-            (newModel, Cmd.none)
+            ({model | posts = res }, Cmd.none)
             
 loadAllBlogs : Cmd Msg
 loadAllBlogs = 
     Http.get
     { url = url 
-    , expect = Http.expectJson LoadAllBlogs (Decode.list contentDecoder)
+    , expect = Http.expectJson (RemoteData.fromResult >> LoadAllBlogs) (Decode.list contentDecoder)
     }
 
