@@ -7,22 +7,23 @@ import Element.Font as Font
 import Element.Region as Region
 import Types
 import Http
+import RemoteData
 
 
 init : String -> (Model, Cmd Msg)
 init str = 
-    ({content = Nothing }
+    ({content = RemoteData.Loading }
     , loadBlog str -- use this command to load blog with said title
     )
 
 type alias Model =
-    { content : Maybe Types.Content
+    { content : Types.WebData (Types.Content)
     }
 
 
 type Msg = 
     ClickedTag String
-    | LoadBlog (Result Http.Error (Types.Content))
+    | LoadBlog (Types.WebData (Types.Content))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -32,16 +33,7 @@ update msg model =
             ( model, Cmd.none )
         
         LoadBlog res ->
-            let
-                newModel = 
-                    case res of
-                        Ok cont ->
-                            {model | content = Just cont}
-                        
-                        Err _ ->
-                            model
-            in
-            (newModel, Cmd.none)
+            ({model | content = res }, Cmd.none)
 
 loadBlog : String ->  Cmd Msg
 loadBlog str = 
@@ -50,7 +42,7 @@ loadBlog str =
     in
     Http.get
     { url = builtURL
-    , expect = Http.expectJson LoadBlog Types.contentDecoder
+    , expect = Http.expectJson (RemoteData.fromResult >> LoadBlog) Types.contentDecoder
     }
 
 -- views
@@ -58,22 +50,15 @@ loadBlog str =
 view : Model -> {title: String, content: Html Msg}
 view model = 
     let
-        ttle = case model.content of
-            Just cont ->
-                cont.blog.title
-            
-            Nothing -> 
-                ""
+        (ttle, elem) = viewWebData model
     in
     
     {title = ttle
-    , content = layout [] <| viewBlog model
+    , content = layout [] <| elem
     }
 
-viewBlog : Model -> Element Msg
-viewBlog {content} =
-    case content of 
-        Just cont -> 
+viewBlog : Types.Content -> Element Msg
+viewBlog cont =
             Element.column 
             [ height fill
             , width <| fillPortion 1
@@ -83,9 +68,6 @@ viewBlog {content} =
             , Element.el[] (viewBody cont.blog.content)
             , Element.el[] (viewTags cont.tags)
             ]
-        
-        Nothing -> 
-            Element.text ""
 
 viewBody : String ->  Element Msg
 viewBody str = 
@@ -131,7 +113,7 @@ viewTags lisTag =
                 ta = Types.retrieveTagString tag
             in
             el[]
-                (text ("# " ++ ta))
+                (Element.text ("# " ++ ta))
     in
     column
         [ height fill
@@ -143,3 +125,17 @@ viewTags lisTag =
     <|
         List.map tagEl lisTag
 
+viewWebData : Model -> (String, Element Msg)
+viewWebData {content} = 
+    case content of
+        RemoteData.Loading ->
+            ("Blog", Element.text "Loading...")
+
+        RemoteData.NotAsked ->
+            ("Blog", Element.text "")
+
+        RemoteData.Failure err ->
+            ("Error", Element.text ("Error loading blog: " ++ Debug.toString err))
+        
+        RemoteData.Success data ->
+            ( data.blog.title , (viewBlog data))
