@@ -14,7 +14,7 @@ import Page.SearchResult as SR
 
 init : () -> Url.Url -> Key -> (Model, Cmd Msg)
 init _ url _ = 
-    changeRouteTo (Route.fromUrl url) <| Home (Home.Model [])
+    changeRouteTo (Route.fromUrl url) <| Load
 
 main : Program () Model Msg
 main =
