@@ -29,14 +29,9 @@ view model =
     }
 
 viewSnippet : Content -> Html Msg
-viewSnippet content = 
-    let
-        ct = content.blog.content
-        tease = String.dropRight ((String.length ct) - 30) ct
-    in
+viewSnippet content =
     div []
         [ a [href "" ] [text content.blog.title]
-        , p [] [text tease ]
         ]
 
 viewWebData : Model -> Html Msg
