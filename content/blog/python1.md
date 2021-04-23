@@ -9,9 +9,20 @@
 }
 ---
 
-Understanding Python: Variables, scope and namespaces.
-Python is a friendly and powerful general-purpose language. If you want more performance to your solution Python may not be the way to go, there are better solutions out there like Rust, C and C++. This does not mean you can not get better performance from your python. There are ways you can use to get good performance and in order to use them to squeeze speed out of your Python, you have to understand how Python works. So unless you have real speed problems, you should write code for clarity, not for speed gains. This series is aimed at showing the reader how Python works and so that ultimately they can write better Pythonic code. The series considers the CPython implementation of Python.
+# Understanding Python: Variables, scope and namespaces.
+Python is a friendly and powerful general-purpose language. If you
+want more performance to your solution Python may not be the way to
+go, there are better solutions out there like Rust, C and C++. This
+does not mean you can not get better performance from your
+python. There are ways you can use to get good performance and in
+order to use them to squeeze performance out of your Python, you have
+to understand how Python does things. So unless you have real performance problems, you should write code for clarity, not for performance gains. This series is aimed at showing the reader how Python works and so that ultimately they can write better Pythonic code. The series considers the CPython implementation of Python.
 In this part we will learn about Python variables, scope and namespaces.
+
+
+Python has everything as an object. Even unconventional things like
+functions are objects.
+
 
 ## Namespace
 A namespace is a context where a given set of names are bound to objects. They are, basically, where names live. Namespaces are collections of (name, object reference) pairs (implemented using dictionaries). The Python interpreter has access to multiple namespaces including the main ones, the built-ins namespace, the global namespace and the local namespace. The namespaces are created at different times and have different lifetimes. For example, the local namespace is created at the invocation of a function and exists until the function returns to the caller or it exits. The global namespace is created at the start of execution of a module while the built-in namespace is created when the interpreter starts.
@@ -32,7 +43,15 @@ In Python a name is analogous to a variable though not exactly. Study the code s
 ```python
 >>> a = 5
 ```
-In the above example, a is a name that references the object, 5. The process of assigning a reference to 5 to a is called binding. A binding makes a name to be associated with an object in the innermost scope of the currently executing part of the program. Bindings occur during a number of instances, when you create a 'variable' like the example above, when you pass a variable or a value to a function. Every time binding happens a reference count is added. A reference count is stored in every object in Python, this helps in garbage collection. When the reference count of an object hits zero, it is collected.
+a is a name that references the object, 5. The process of assigning a
+reference to 5 to a is called binding. A binding makes a name to be
+associated with an object in the innermost scope of the currently
+executing part of the program. Bindings occur during a number of
+instances, when you create a 'variable' like the example above, when
+you pass a variable or a value to a function. Every time binding
+happens a reference count is added. A reference count is stored in
+every object in Python, this helps in garbage collection. When the
+reference count of an object hits zero, it is garbage collected.
 
 ```python
 >>> b = 8
@@ -46,7 +65,18 @@ In the above example, a is a name that references the object, 5. The process of 
 >>> id(a)
 9079232
 ```
-In the above example, what happens is Python will create an integer object, 8, in memory then the name b is bound to the object. Then when you assign b to a, name a will be given the object that b references. Kind of like this, int *b = &a in C . In C, however, a = b will take value at the memory location of a and copy it to another memory slot for b. Python does some smart thing that if an object exists anywhere in memory it will be reused, explains why in the above example, a and b have the same identity. The id(object) function takes an object then returns a unique, constant through the object lifetime, integer that is the memory location of the object. Then we have the is which tests if two names reference the same object, if they have the same 'identity' returned by id(object).
+In the above example, Python creates an integer
+object, 8, in memory then the name b is bound to the object. 
+When b is assigned to a, name a will point to the same object b
+references. Kind of like this, `int *b = &a` in C. In C, however, `a =
+b` will take value at the memory location of a and copy it to another
+memory slot for b. Python does some smart thing that if an object
+exists anywhere in memory it will be reused, explains why in the above
+example, a and b have the same identity. The `id(object)` function
+takes an object then returns a unique constant integer that is the
+memory location of the object, at least in CPython. Then we have the
+`is` keyword which tests if two names reference the same object, 
+if they have the same 'identity' returned by id(object).
 ```python
 >>> a = [3,4,5]
 >>> b = a
@@ -206,4 +236,3 @@ The is operator compares the unique object id, it differs from the == operator t
 Python avoids copies on assignments to save memory which would otherwise make it really slow.
 
 As we continue to learn how Python does things we will be able to write better code. In the next part, we will learn about the Python objects.
-
