@@ -135,8 +135,9 @@ rng = 5
 val = int_parts[0]
 target_strng = ''
 if len(int_parts) == 2:
-	# there was a remainder
-	rnge = 4
+	# there was a remainder, 
+	#ets handle the remainder and set the rng value to 4
+	rng = 4
 	# get the integer bytes, I am on a little endian system
 	ibytes = int_parts[0].to_bytes(4, "little")
 	target_strng += convert_4_byte_int_to_str(ibytes)
