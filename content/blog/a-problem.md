@@ -4,6 +4,7 @@
   "author": "Pancakem",
   "title": "Here is a problem",
   "description": "A small possibly non halting problem..",
+  "image": "",
   "published": "2021-08-23",
 }
 ---
