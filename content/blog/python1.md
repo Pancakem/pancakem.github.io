@@ -36,14 +36,7 @@ This will allocated some memory, most probably on the stack, and the
 variable x will be associated with that memory. And when you change
 the value of the variable `x`, the memory associated is modified.
 
-Python does things differently in a bit of a clever way, 
-
-
-The python runtime pre-allocates a number of small integers so that
-it can reuse them instead or creating new ones.
-
-Python has everything as an object. Even unconventional things like
-functions are objects.
+Python does things differently in a very clever way.
 
 Now let us better understand variables and assignment in Python.
 A `name` is a Python identifier used to point to values, functions,

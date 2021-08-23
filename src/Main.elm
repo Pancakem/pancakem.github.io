@@ -34,10 +34,10 @@ manifest =
     , orientation = Manifest.Portrait
     , description = "A blog about stuff"
     , iarcRatingId = Nothing
-    , name = "Amatuer Opinion"
+    , name = "Amateur Opinion"
     , themeColor = Just Color.white
     , startUrl = pages.index
-    , shortName = Just "amatuer-opinion"
+    , shortName = Just "amateur-opinion"
     , sourceIcon = images.iconPng
     , icons = []
     }
@@ -187,7 +187,7 @@ pageView model siteMetadata page viewForPage =
             }
 
         Metadata.BlogIndex ->
-            { title = "elm-pages blog"
+            { title = "Amateur Opinion"
             , body =
                 [ Element.column [ Element.padding 20, Element.centerX ] [ Index.view siteMetadata ]
                 ]
@@ -218,10 +218,10 @@ head metadata =
                 Metadata.Page meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "Amatuer Opinion"
+                        , siteName = "Amateur Opinion"
                         , image =
                             { url = images.iconPng
-                            , alt = "amatuer-opinion logo"
+                            , alt = "amateur-opinion logo"
                             , dimensions = Nothing
                             , mimeType = Nothing
                             }
@@ -234,7 +234,7 @@ head metadata =
                 Metadata.Article meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "Amatuer Opinion"
+                        , siteName = "Amateur Opinion"
                         , image =
                             { url = meta.image
                             , alt = meta.description
@@ -271,7 +271,7 @@ head metadata =
                     in
                     Seo.summary
                         { canonicalUrlOverride = Nothing
-                        , siteName = "Amatuer Opinion"
+                        , siteName = "Amateur Opinion"
                         , image =
                             { url = meta.avatar
                             , alt = meta.name ++ "'s articles."
@@ -291,16 +291,16 @@ head metadata =
                 Metadata.BlogIndex ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "Amatuer Opinion"
+                        , siteName = "Amateur Opinion"
                         , image =
                             { url = images.iconPng
-                            , alt = "Amatuer Opinion"
+                            , alt = "Amateur Opinion"
                             , dimensions = Nothing
                             , mimeType = Nothing
                             }
                         , description = siteTagline
                         , locale = Nothing
-                        , title = "amatuer-opinion blog"
+                        , title = "amateur-opinion blog"
                         }
                         |> Seo.website
            )
@@ -313,4 +313,4 @@ canonicalSiteUrl =
 
 siteTagline : String
 siteTagline =
-    "Amatuer Opinion Blog"
+    "Amateur Opinion Blog"
