@@ -18,7 +18,7 @@ type alias Author =
 all : List Author
 all =
     [ { name = "Pancakem"
-      , avatar = Pages.images.author.dillon
+      , avatar = Pages.images.author.fpgaCyclone2
       , bio = "Hello"
       }
     ]
