@@ -4,12 +4,16 @@
   "author": "Pancakem",
   "title": "Here is a problem",
   "description": "A small possibly non halting problem..",
-  "image": "",
+  "image": "https://unsplash.com/photos/VLppeHtLh08",
   "published": "2021-08-23",
 }
 ---
 
-## Here is a problem
+# Here is a problem
+
+Image is courtesy of [Unsplash](https://unsplash.com/@sharonmccutcheon)
+
+## Introduction
 
 Say we have a program that requires the user to enter a 20 character long password, S<sub>20</sub>.
 In order to validate the password, the program casts every 4 characters into a 32 bit integer
@@ -20,6 +24,8 @@ hashcode X<sub>h</sub>. Is it possible to write a halting program to give us acc
 
 I am not yet sure about the answer to that question. I have done some investigating and experimentation. 
 Let me share my process and findings,
+
+## Approach one
 
 My first approach was to write a python script that generates a random 20-byte ascii string 
 then tests if the string can produce our desired hashcode.
@@ -83,12 +89,10 @@ Because of repetition our combination formula becomes:
 ```
 
 The result becomes `7,928,015,940,627,369,981,240`. This means our program should generate that number of strings, 7 sextillion strings and test each for the hashcode.
-
-   
-
-Our program should in the end generate a large number of strings to test.
-
 Well, then I thought of moving to a different, possibly faster, approach.
+
+## Approach two
+
 What if we divide up the hashcode into 4 32-bit integers from which we can pick a character of each its 8-bit value.
 Sounds exciting right? Well if you think so, I thought so too until I realised later how flawed the approach is.
 
