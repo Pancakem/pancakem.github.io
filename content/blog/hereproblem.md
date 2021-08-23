@@ -3,24 +3,22 @@
   "type": "blog",
   "author": "Pancakem",
   "title": "Here is a problem",
-  "description": "A small possibly non halting problem..",
-  "image": "images/article-covers/hand.jpg",
+  "description": "A small possibly non halting problem ...",
+  "image": "images/article-covers/halt.jpg",
   "published": "2021-08-23",
 }
 ---
 
-# Here is a problem
+# Introduction
 
 Image is courtesy of [Unsplash](https://unsplash.com/@sharonmccutcheon)
 
-## Introduction
-
-Say we have a program that requires the user to enter a 20 character long password, S<sub>20</sub>.
+Say we have a program that requires the user to enter a 20 character long password, S.
 In order to validate the password, the program casts every 4 characters into a 32 bit integer
-and the 5 integers are summed up producing a hashcode X<sub>h</sub>.
+and the 5 integers are summed up producing a hashcode X.
 
-Suppose we lost our password, and wrote a program to try and find a string S<sub>20</sub> that will produce the 
-hashcode X<sub>h</sub>. Is it possible to write a halting program to give us access to our program?
+Suppose we lost our password, and wrote a program to try and find a string S that will produce the 
+hashcode X. Is it possible to write a halting program to give us access to our program?
 
 I am not yet sure about the answer to that question. I have done some investigating and experimentation. 
 Let me share my process and findings,
@@ -38,11 +36,14 @@ import string
 import random
 
 def make_20_byte_str():
-	made_str = ''.join(random.SystemRandom().choice(string.punctuation + string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(21))
+	made_str = ''.join(random.SystemRandom().choice(string.punctuation 
+		+ string.ascii_uppercase + string.ascii_lowercase +
+		string.digits) for _ in range(21))
 	return made_str
 ```
 
 ### Step 2: Produce hashcode from string
+
 By dividing the string into 5 parts each 4-bytes long part converted into an integer, we result into 5 integers that we sum up to a hashcode. 
 
 ``` python

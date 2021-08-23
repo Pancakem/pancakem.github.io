@@ -54,6 +54,7 @@ reference `5` to `a` is called binding. A binding associates a name to
 an object in the innermost scope of the currently
 executing part of the program. Bindings occur during a number of
 instances, 
+
 * when you create a 'variable' like the example above
 * when you pass a variable or a value to a function. 
 
