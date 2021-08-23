@@ -1,3 +1,13 @@
+---
+{
+  "type": "blog",
+  "author": "Pancakem",
+  "title": "Here is a problem",
+  "description": "A small possibly non halting problem..",
+  "published": "2021-08-23",
+}
+---
+
 ## Here is a problem
 
 Say we have a program that requires the user to enter a 20 character long password, S<sub>20</sub>.
