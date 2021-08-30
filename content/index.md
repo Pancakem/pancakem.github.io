@@ -11,6 +11,7 @@ This is the place I write stuff.
 
 ## Table O Contents
 * [Blog](/blog)
-* [Write-ups](/write-up)
+* [Write-up : Ez](/write-ups/ez)
+* [Write-up: Lockcode](/write-ups/lockcode)
 
 
