@@ -1,6 +1,5 @@
-.stack-work
-dist/
-.cache/
-node_modules/
-elm-stuff/
-gen/
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor

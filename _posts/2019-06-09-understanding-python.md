@@ -1,12 +1,8 @@
 ---
-{
-  "type": "blog",
-  "author": "Pancakem",
-  "title": "Understanding Python: Variables, Scope and Namespaces",
-  "description": "Here's an intro for my blog post to get you interested in reading more...",
-  "image": "images/article-covers/hello.jpg",
-  "published": "2019-06-09",
-}
+layout: post
+title: "Understanding Python: Variables, Scope and Namespaces"
+date: 2019-06-09 10:32:42 +0300
+categories: python
 ---
 
 # Introduction
@@ -18,7 +14,7 @@ python. There are ways you can use to get good performance and in
 order to use them to squeeze performance out of your Python, you have
 to understand how Python does things. So unless you have real
 performance problems, you should write code for clarity, not for
-performance gains. 
+performance gains.
 
 This article is aimed at introducing the reader to
 how Python works and so that ultimately they can write better Pythonic
@@ -28,9 +24,9 @@ code. The article considers the CPython implementation of Python.
 Python does not have variables in the same sense as other languages
 like C and Go. In Go for example, a variable may be declared as follows.
 
-```Go
+{% highlight go %}
 	var x int = 20
-```
+{% endhighlight %}
 
 This will allocated some memory, most probably on the stack, and the
 variable x will be associated with that memory. And when you change
@@ -42,7 +38,7 @@ Now let us better understand variables and assignment in Python.
 A `name` is a Python identifier used to point to values, functions,
 modules or any other object.
 In Python a variable is analogous to a name though not exactly. A name can
-be, more precisely, thought of as a reference to a value. 
+be, more precisely, thought of as a reference to a value.
 
 Study the code snippet below,
 
@@ -53,10 +49,10 @@ Study the code snippet below,
 reference `5` to `a` is called binding. A binding associates a name to
 an object in the innermost scope of the currently
 executing part of the program. Bindings occur during a number of
-instances, 
+instances,
 
 * when you create a 'variable' like the example above
-* when you pass a variable or a value to a function. 
+* when you pass a variable or a value to a function.
 
 Every time binding happens a reference count is added. A reference count is stored in
 every object in Python, this helps in garbage collection. When the
@@ -68,20 +64,20 @@ reference count of an object hits zero, it is garbage collected.
 >>> id(b)
 9079232
 >>> id(a)
-9079232 
->>> del a # delete the reference 
+9079232
+>>> del a # delete the reference
 >>> a = 8 # assign a to 8  and check the id
 >>> id(a)
 9079232
 ```
 In the above example, Python creates an integer
-object, 8, in memory then the name `b` is bound to the object. 
+object, 8, in memory then the name `b` is bound to the object.
 When `b` is assigned to `a`, name `a` will point to the same object `b`
-references. Kind of like this, 
+references. Kind of like this,
 ```C
 int *b = &a
 ```
-in C. 
+in C.
 
 In C, however, `a = b` will take value at the memory location of a and
 copy it to another memory slot for b. Python is smart, if an object
@@ -111,7 +107,7 @@ object at the beginning but later want to mutate them differently and independen
 ```python
 >>> a = [3,6,9]
 >>> b = a
->>> a[2] = 0 # mutate a 
+>>> a[2] = 0 # mutate a
 >>> b # the changes in a reflect in b,`names refer the same object`
 [3, 6, 0]
 ```
@@ -189,7 +185,7 @@ Complex data structures hold objects and each of those fields ( here a field cou
 …     n = 0
 …     def __init__(self, n):
 …         self.n = n
-… 
+…
 >>> a = 7
 >>> t = Test(7)
 >>> id(a)
@@ -204,7 +200,7 @@ It goes onto function arguments, they also are like the normal assignments:
 >>> def modd(lis, num):
 …      for i in range(num):
 …         lis.append(i)
-… 
+…
 >>> x = [3,4,5]
 >>> modd(x, 5)
 >>> x
@@ -216,7 +212,7 @@ Function arguments are also assigned and you know what that means. `lis` and `nu
 >>> def unmodd(lis, val):
 …     for i in range(num):
 …         lis = lis + [i]
-… 
+…
 >>> x = [0,1,2]
 >>> unmodd(x, 2)
 >>> x
@@ -229,7 +225,7 @@ This does not work. A new assignment occurs because on the right hand-side a new
 ...     for i in range(val):
 ...             lis = lis + [i]
 ...     return lis
-... 
+...
 >>> x = [0, 1, 2]
 >>> p = unmodd(x, 3)
 >>> p
@@ -240,7 +236,7 @@ This does not work. A new assignment occurs because on the right hand-side a new
 A namespace is a context where a given set of names are bound to objects. They are, basically, where names live. Namespaces are collections of (name, object reference) pairs (implemented using dictionaries). The Python interpreter has access to multiple namespaces including the main ones, the built-ins namespace, the global namespace and the local namespace. The namespaces are created at different times and have different lifetimes. For example, the local namespace is created at the invocation of a function and exists until the function returns to its caller or exits. The global namespace is created at the start of execution of a module while the built-in namespace is created when the interpreter starts.
 
 In the CPython implementation, local variable store is fast. What happens is when a function is invoked, all local variables are stored in a fixed size array and the variable names are assigned to the indexes. Thus retrieving a local variable is a simple lookup into the array. A global lookup, is not inside a dictionary which involves hashes, hence not as fast as local variable lookup. However, the global lookup has been optimized and is not so slow. Object attribute lookup is very slow.
-To see whats available in the built-in namespace, enter the REPL and run __builtins__.__dict___ .
+To see whats available in the built-in namespace, enter the REPL and run __builtins__.__dict___ .
 
 
 ## Scope
@@ -261,7 +257,7 @@ A code block is a unit of the program code that is executed as an independent un
 
 #### A little better code take away
 Now that we have learnt how Python handles 'variables', we can make a
-few statements on writing more Pythonic code that achieves speed. 
+few statements on writing more Pythonic code that achieves speed.
 From namespaces we have learnt that, the namespace lookup is upward. This means that the interpreter accesses local variables much more efficiently than global variables. Using local variables whenever possible and especially inside for loops is a good optimization practice. Let's see a code snippet
 
 ```python

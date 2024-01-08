@@ -1,12 +1,8 @@
 ---
-{
-  "type": "blog",
-  "author": "Pancakem",
-  "title": "Writing a Raspberry Pi GPIO driver",
-  "description": "A baremetal rust gpio driver",
-  "image": "images/article-covers/hello.jpg",
-  "published": "2020-07-09",
-}
+layout: post
+title: "Writing a Raspberry Pi GPIO driver"
+description: "A baremetal rust gpio driver"
+date: 2020-07-09 10:54:12 +0300
 ---
 
 

@@ -1,42 +1,36 @@
 ---
-{
-  "type": "blog",
-  "author": "Pancakem",
-  "title": "Here is a problem",
-  "description": "A small possibly non halting problem ...",
-  "image": "images/article-covers/halt.jpg",
-  "published": "2021-08-23",
-}
+layout: post
+title: "Here is a problem"
+description: "A small possibly non halting problem ..."
+date: 2021-08-23 11:13:54 +0300
 ---
 
 # Introduction
-
-Image is courtesy of [Unsplash](https://unsplash.com/@sharonmccutcheon)
 
 Say we have a program that requires the user to enter a 20 character long password, S.
 In order to validate the password, the program casts every 4 characters into a 32 bit integer
 and the 5 integers are summed up producing a hashcode X.
 
-Suppose we lost our password, and wrote a program to try and find a string S that will produce the 
+Suppose we lost our password, and wrote a program to try and find a string S that will produce the
 hashcode X. Is it possible to write a halting program to give us access to our program?
 
-I am not yet sure about the answer to that question. I have done some investigating and experimentation. 
+I am not yet sure about the answer to that question. I have done some investigating and experimentation.
 Let me share my process and findings,
 
 ## Approach one
 
-My first approach was to write a python script that generates a random 20-byte ascii string 
+My first approach was to write a python script that generates a random 20-byte ascii string
 then tests if the string can produce our desired hashcode.
 
 
 ### Step 1: Generate string
 
-```python 
+```python
 import string
 import random
 
 def make_20_byte_str():
-	made_str = ''.join(random.SystemRandom().choice(string.punctuation 
+	made_str = ''.join(random.SystemRandom().choice(string.punctuation
 		+ string.ascii_uppercase + string.ascii_lowercase +
 		string.digits) for _ in range(21))
 	return made_str
@@ -44,7 +38,7 @@ def make_20_byte_str():
 
 ### Step 2: Produce hashcode from string
 
-By dividing the string into 5 parts each 4-bytes long part converted into an integer, we result into 5 integers that we sum up to a hashcode. 
+By dividing the string into 5 parts each 4-bytes long part converted into an integer, we result into 5 integers that we sum up to a hashcode.
 
 ``` python
 import struct
@@ -65,15 +59,15 @@ hashcode = 0x19E09CDF
 
 while True:
 	target_string = make_20_byte_str()
-	res = string_bytes_to_int(target_string) 
+	res = string_bytes_to_int(target_string)
 	if res == hashcode:
 		print(target_string)
 		break
 ```
 
-I ran this implementation for 16 hours without a result. Of course, the problem should terminate at some point, assuming there are few collisions so that 
+I ran this implementation for 16 hours without a result. Of course, the problem should terminate at some point, assuming there are few collisions so that
 we cover the expanse of all possible 20-byte strings.
-This can be better viewed as a combination problem. 
+This can be better viewed as a combination problem.
 
 The general formula for combination is:
 
@@ -81,7 +75,7 @@ The general formula for combination is:
 	n! / k!(n-k)!
 ```
 
-So we have a set of 94 possible characters, 52 letters (26 of both uppercase and lowercase), 10 digits and 32 punctuation characters. Thus `n = 94`. 
+So we have a set of 94 possible characters, 52 letters (26 of both uppercase and lowercase), 10 digits and 32 punctuation characters. Thus `n = 94`.
 From this set we want to pick any 20 characters and repetition is allowed. Thus `k = 20`
 Because of repetition our combination formula becomes:
 
@@ -102,22 +96,22 @@ Let us check it out.
 ### Step 1: Integer divide the integer by 5, if there is a remainder add it to the results
 
 ```python
- 
+
 # returns a list of parts
 def get_4_byte_ints(hashcode):
 	val = hashcode // 5
 	part_with_remainder = val + (hashcode % 5)
-	
+
 	if part_with_remainder == val:
 		return [val]
-	
+
 	return [part_with_remainder, val]
 ```
 
 ### Step 2: Convert each 8-bit of the 32 bit integers to a character
 
 ```python
-	
+
 def convert_4_byte_int_to_str(int_bytes):
         c_str = ''
         for i in int_bytes:
@@ -128,14 +122,14 @@ def convert_4_byte_int_to_str(int_bytes):
 ### Step 3: Bring it all together
 
 ```python
-	
+
 
 int_parts = get_4_byte_ints(hashcode)
 rng = 5
 val = int_parts[0]
 target_strng = ''
 if len(int_parts) == 2:
-	# there was a remainder, 
+	# there was a remainder,
 	#ets handle the remainder and set the rng value to 4
 	rng = 4
 	# get the integer bytes, I am on a little endian system
@@ -153,13 +147,12 @@ print(target_strng)
 
 Have you noticed the problem? A single byte can represent `0-255`, however, the ascii chart has representations of `0-127`.
 This means if any byte value of the integer exceeds 127 we cannot get an `ascii` or a `utf-8` value, we run into a `UnicodeError`. This is the end.
-You may think of trying to go for `utf-16`, we may get conversions but this will use 16-bits for every character and we will end up with a 
+You may think of trying to go for `utf-16`, we may get conversions but this will use 16-bits for every character and we will end up with a
 10 character password which is not our desired result.
 
 
 ## Conclusion, for now
 
-I feel I have not broken deep enough into this problem. Anything new, I'll add onto here. 
+I feel I have not broken deep enough into this problem. Anything new, I'll add onto here.
 If you think there's a better and conclusive way to approach the problem please reach out
 at pancakesdeath at protonmail.com
-
