@@ -151,8 +151,18 @@ You may think of trying to go for `utf-16`, we may get conversions but this will
 10 character password which is not our desired result.
 
 
-## Conclusion, for now
+## Conclusion
 
-I feel I have not broken deep enough into this problem. Anything new, I'll add onto here.
+~~I feel I have not broken deep enough into this problem. Anything new, I'll add onto here.
 If you think there's a better and conclusive way to approach the problem please reach out
-at pancakesdeath at protonmail.com
+at pancakesdeath at protonmail.com~~
+
+The problem I am looking at here is indeed solvable in theory, given sufficient computational power and time. However, the practical feasibility of solving it depends on the scale of the computation required and the constraints of the problem.
+
+The problem has a finite search space given the example of a 20-character password we used above. That password has a possible 94 character composition, the total number of combinations `94^20` which is approximately `7.9 x 10^39`. While this is a large number it still is finite.
+
+A brute-force approach like I have tried above *will* eventually find the correct password, given enough time and computational resources. With a finite search space, a program that is halting can eventually reach a correct password.
+
+Another thing to look at is the possibility of collisions. The hashcode computation mechanism is simple and deterministic but there is high chances for collisions where multiple passwords produce the same hashcode. Hence the program will halt at finding **a valid** password that is not necessarily the original password.
+
+The brute-force approach I have followed here is impractical (I scream at the 16 hours of senseless computation). The problem is tractable and practical with a parallized implementation where we can throw the problem at GPUs or use [rainbow tables](https://en.wikipedia.org/wiki/Rainbow_table).
