@@ -52,7 +52,7 @@ if ! systemctl is-active --quiet nginx; then
     echo "Nginx is not running. Testing configuration..."
     nginx_test_output=$(nginx -t 2>&1)
 
-    if echo "$nginx_test_output" | grep -q '\[::\]:'; then
+    if echo "$nginx_test_output" | grep -q '[::]:'; then
         echo "IPv6 configuration issue detected. Editing local.conf..."
         cp /etc/nginx/conf.d/local.conf /etc/nginx/conf.d/local/conf.bak
         sed -i '/\[::\]/d' /etc/nginx/conf.d/local.conf
@@ -73,4 +73,5 @@ if ! systemctl is-active --quiet nginx; then
     fi
 else
     echo "Nothing to do"
+fi
 ```
