@@ -11,11 +11,11 @@ MCUs, bring-up, drivers, and the protocols that make them useful.
 
 ## Currently
 
-**Embedded Firmware Engineer (Contract), tinyvision.ai**
+**Embedded Firmware Engineer (Contract), [tinyVision.ai](https://tinyvision.ai)**
 I develop firmware for USB and MIPI cameras, working on the data path from
 sensor to host.
 
-**Embedded Firmware Engineer (Contract), throughput.agency**
+**Embedded Firmware Engineer (Contract), [throughput.agency](https://throughput.agency)**
 I work on a remote platform for hardware-in-the-loop (HIL) testing of
 firmware, so teams can run automated tests against real devices without
 being physically next to them.
@@ -25,8 +25,9 @@ being physically next to them.
 **Embedded Linux Developer, Pesapal (4 years)**
 Pesapal is a payment processor serving around eight countries across East and
 Central Africa. I worked on EMV card payment support on embedded Linux
-devices, and contributed early designs for a forecourt controller for fuel
-station management.
+devices, integrating the payment devices to Windows via USB to 
+Oracle Payment Interface and custom customer sales systems, and contributed 
+early designs for a forecourt controller for fuel station management.
 
 ## Areas of focus
 
